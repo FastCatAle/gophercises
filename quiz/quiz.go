@@ -7,6 +7,22 @@ import (
 	"os"
 )
 
+type problem struct {
+	ques	string
+	answ	string
+}
+
+func parseLines(lines [][]string) []problem {
+	ret := make([]problem, len(lines))
+	for i, line := range lines {
+		ret[i] = problem {
+			ques:	line[0],
+			answ:	line[1],
+		}
+	}
+	return ret
+}
+
 func main() {
 	csvFilename := flag.String("file", "problems.csv", "CSV file to read in the format 'question,answer'")
 	flag.Parse()
@@ -21,5 +37,17 @@ func main() {
 		fmt.Println("Failed to read the CSV file.")
 		os.Exit(1)
 	}
-	fmt.Println(lines)
+	problems := parseLines(lines)
+
+	correct := 0
+	for i, p := range problems {
+		fmt.Printf("Problem #%d: %s = \n", i+1, p.ques)
+		var answer string
+		fmt.Scanf("%s/n", &answer)
+		if answer == p.answ {
+			fmt.Println("Correct!")
+			correct++
+		}
+	}
+	fmt.Printf("You scored %d out of %d\n", correct, len(problems))
 }
